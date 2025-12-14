@@ -72,11 +72,7 @@ def circular_sampling(input, r, num_points=8, padding_mode='zeros'):
 
 class RadialReceptiveField(nn.Module):
     """
-    高效径向感受野模块
-    创新点：
-    1. 使用预计算网格实现完全并行化
-    2. 针对俯视图优化采样模式
-    3. 自适应特征融合机制
+    径向感受野模块
     """
 
     def __init__(self, in_channels, max_radius=5, num_points=8):
@@ -176,4 +172,5 @@ if __name__ == "__main__":
     #test_input2 = torch.randn(4, 1, 64, 64).float().cuda()  # 输入尺寸需匹配模型
 
     output = rcg(test_input1)
+
     print(output.shape)
