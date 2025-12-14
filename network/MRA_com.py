@@ -80,13 +80,11 @@ class EMRA_focus(nn.Module):
         self.max_m1 = nn.MaxPool2d(kernel_size=3, stride=1, padding=1)
         self.focus_downsample = FocusDownsample()
 
-        # 核心改变：引入一个统一的、高效的通道融合模块
-        # 使用分组卷积，将 9*C 的通道分为 9 组，每组内部进行 1x1 卷积
-        # 参数量为 9 * (C * C) = 9*C^2，远低于普通 1x1 卷积的 (9C)^2
+
         self.channel_mixer = nn.Conv2d(9 * channel, 9 * channel, kernel_size=1, groups=9, bias=False)
         self.mixer_norm = norm_layer(9 * channel)
 
-        # 注意力计算部分保持不变，它本身是高效的
+
         self.H_att1 = nn.Conv2d(channel, channel, (att_kernel, 3), 1, (att_padding, 1), groups=channel, bias=False)
         self.V_att1 = nn.Conv2d(channel, channel, (3, att_kernel), 1, (1, att_padding), groups=channel, bias=False)
         self.H_att2 = nn.Conv2d(channel, channel, (att_kernel, 3), 1, (att_padding, 1), groups=channel, bias=False)
@@ -228,4 +226,5 @@ if __name__ == "__main__":
     print('number of params:', n_parameters)
     test_input1 = torch.randn(4, 256, 64, 64).float().cuda()  # 输入尺寸需匹配模型
     output = rcg(test_input1)
+
     print(output.shape)
